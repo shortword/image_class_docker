@@ -36,14 +36,13 @@ RUN for req in wheel pydot $(cat python/requirements.txt); do \
 
 WORKDIR $SSD_ROOT/build
 
-RUN cmake -DUSE_CUDNN=1 ..
+RUN cmake -DUSE_CUDNN=1 -DUSE_OPENCV=1 ..
 
 RUN make -j$(nproc)
 
-ENV PYCAFFE_ROOT $CAFFE_ROOT/python
-ENV PYTHONPATH $PYCAFF_ROOT:$PYTHONPATH
+ENV PYTHONPATH $SSD_ROOT/python:$PYTHONPATH
 # NOTE: If you'd like the caffe binaries to be run directly from the command
 #       line, uncomment the next line
-# ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
-RUN echo "$CAFFE_ROOT/build/lib" >>/etc/ld.so.conf.d/ssd.conf
+# ENV PATH $SSD_ROOT/build/tools:$SSD_ROOT:$PATH
+RUN echo "$SSD_ROOT/build/lib" >>/etc/ld.so.conf.d/ssd.conf
 RUN ldconfig
